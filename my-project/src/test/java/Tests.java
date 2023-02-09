@@ -1,8 +1,10 @@
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -137,6 +139,21 @@ public class Tests {
 		String messageText = termsAndConditionsMessage.getText();
 		Assert.assertTrue(messageText.equals("Please accept Terms & Conditions - Required"), "Terms & Conditions message not found");
 
+		WebElement termsAndConditionsCheckbox = driver.findElement(By.xpath("/html/body/div/div/div/div/div/input"));
+		termsAndConditionsCheckbox.click();
+		
+		proceedButton.click();
+		
+		
+		((JavascriptExecutor) driver).executeScript("window.open()");
+		ArrayList<String> tabs = new ArrayList<String>(driver.getWindowHandles());
+		driver.switchTo().window(tabs.get(1));
+
+		
+		String url = "http://www.webdriveruniversity.com/";
+		driver.get(url);
+
+		
 
 	}
 
