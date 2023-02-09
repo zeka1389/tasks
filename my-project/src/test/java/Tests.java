@@ -49,16 +49,50 @@ public class Tests {
 			addToBasketButtons.get(randomIndex).click();
 		}
 
-		
 		WebElement basketIcon = driver.findElement(By.xpath("//*[@id=\"root\"]/div/header/div/div[3]/a[4]/img"));
 		basketIcon.click();
 
-		
 		WebElement checkoutButton = driver.findElement(By.xpath("//button[text()='PROCCED TO CHECKOUT']"));
 		checkoutButton.click();
+		String actual = driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/div/text()")).getText();
+		String expected = "4";
 
+		Assert.assertEquals(actual, expected, "Amount need to be 4");
+
+	}
+
+	@Test
+	public void verifyErrorHandlingPromoCode() throws InterruptedException {
+		Random random = new Random();
+		for (int i = 0; i < 4; i++) {
+			WebElement addToBasketButton = driver.findElement(By.xpath("//button[text()='ADD TO CART']"));
+			addToBasketButton.click();
+		}
+
+		List<WebElement> addToBasketButtons = driver.findElements(By.xpath("//button[text()='ADD TO CART']"));
+		for (int i = 0; i < 3; i++) {
+			int randomIndex = random.nextInt(addToBasketButtons.size());
+			addToBasketButtons.get(randomIndex).click();
+		}
+
+		WebElement basketIcon = driver.findElement(By.xpath("//*[@id=\"root\"]/div/header/div/div[3]/a[4]/img"));
+		basketIcon.click();
+
+		WebElement checkoutButton = driver.findElement(By.xpath("//button[text()='PROCCED TO CHECKOUT']"));
+		checkoutButton.click();
 		
-
+		String actual = driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/div/text()")).getText();
+		
+		WebElement promoCodeInput = driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/div/div/input"));
+		promoCodeInput.sendKeys(actual);
+		
+		WebElement applyPromoCodeButton = driver.findElement(By.xpath("/html/body/div/div/div/div/div/div/button"));
+		applyPromoCodeButton.click();
+		
+		Thread.sleep(5);
+		
+		WebElement errorMessage = driver.findElement(By.xpath("/html/body/div/div/div/div/div/div/span"));
+		Assert.assertNotNull(errorMessage);
 	}
 
 	@AfterTest
